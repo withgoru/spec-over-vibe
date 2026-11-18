@@ -9,15 +9,143 @@ mdc: true
 transition: slide-left
 ---
 
-# [TODO: Intro 슬라이드 직접 작성 영역]
+<div class="h-full flex flex-col justify-between py-2">
+  <div>
+    <div class="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold tracking-wide mb-3">
+      동우화인켐 임직원 역량 강화 특강 · SPEC OVER VIBE
+    </div>
+    <h1 class="!text-3xl !leading-tight font-bold text-slate-900 mt-1">
+      바이브코딩 웹 서비스, '만들기'에서 '운영·유지보수'까지
+    </h1>
+    <p class="!text-base text-slate-600 font-medium !mt-2">
+      감(Vibe)이 아닌 명세(Spec)와 Git으로 AI를 통제하는 현업 실전 가이드
+    </p>
+  </div>
 
-강의 표지, 강사 소개, 교육 배경 및 전체 아젠다(이론 2시간 + 시연 1시간)를 이 위치에 작성합니다.
+  <div class="grid grid-cols-3 gap-3 my-4 text-xs">
+    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+      <div class="text-blue-700 font-bold text-xs mb-1">PART 1 · 이론 1부 (50분)</div>
+      <div class="font-bold text-slate-800 text-sm mb-1">웹 서비스 구조와 코드 독해</div>
+      <div class="text-slate-600 leading-relaxed">클라이언트-서버 요청·응답 사이클, HTML/CSS/JS/Python 고유 좌표 읽기, <code>CONFIG</code> 분리</div>
+    </div>
+    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+      <div class="text-amber-700 font-bold text-xs mb-1">PART 2 · 이론 2부 (70분)</div>
+      <div class="font-bold text-slate-800 text-sm mb-1">SDD 명세 기반 개발 & Git 통제</div>
+      <div class="text-slate-600 leading-relaxed">7대 실수 교정, 레거시 <code>SPEC.md</code> 역추출, Dataiku Cobuild · Git 12대 용어 & 프롬프팅 3대 기법</div>
+    </div>
+    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+      <div class="text-emerald-700 font-bold text-xs mb-1">PART 3 · 라이브 시연 (60분)</div>
+      <div class="font-bold text-slate-800 text-sm mb-1">실전 트러블슈팅 & 유지보수 4막</div>
+      <div class="text-slate-600 leading-relaxed">고장 내고 → 원인 찾고(<code>F12</code> · 서버 로그 · <code>Diff</code>) → 프롬프트로 안전하게 고치기</div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between pt-3 border-t border-slate-200 text-xs text-slate-500">
+    <div><strong>대상:</strong> Dataiku 및 바이브코딩 기반 웹 서비스 개발·운영 현업 구성원 & DS</div>
+    <div><strong>강사:</strong> 최우영 (KickcodePlus) &nbsp;|&nbsp; <strong>구성:</strong> 총 3시간 (이론 2h + 라이브 시연 1h)</div>
+  </div>
+</div>
 
 <!--
-[Slide 0 · Cover / Intro Placeholder]
-- 제약 2 준수: 표지(Cover) 및 도입부(Intro)는 강사가 직접 작성할 예정이므로 플레이스홀더만 배치합니다.
-- 이후 Module 1 ~ Module 4 및 Live Demo 슬라이드가 이 아래에 이어집니다.
+[Slide 0-1 · 강의 표지 (Cover)]
+- 제목: 바이브코딩 웹 서비스, '만들기'에서 '운영·유지보수'까지
+- 부제: 감(Vibe)이 아닌 명세(Spec)와 Git으로 AI를 통제하는 현업 실전 가이드
 -->
+
+---
+
+# 최우영
+## Owner of KickcodePlus | Web Developer | Lecturer
+
+<div class="grid grid-cols-12 gap-4 mt-3 text-xs items-stretch">
+  <div class="col-span-5 flex flex-col justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <div>
+          <div class="text-base font-bold text-slate-900">최우영 (goru)</div>
+          <div class="text-xs text-blue-700 font-semibold">KickcodePlus 대표 · Software Engineer</div>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 font-bold text-[11px]">withgoru.com</span>
+      </div>
+      <p class="!text-xs text-slate-600 leading-relaxed !my-2">
+        소프트웨어 개발, 데이터 분석, 현업 실무 교육의 경계를 연결하는 웹 개발자이자 기술 강사입니다. 현업 구성원이 AI와 웹 기술을 블랙박스 없이 이해하고 안전하게 운영할 수 있도록 돕습니다.
+      </p>
+      <div class="grid grid-cols-2 gap-2.5 my-3">
+        <div class="p-2.5 rounded-lg bg-white border border-slate-200 text-center">
+          <div class="text-xl font-bold text-blue-700">290+</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">기업·대학 강의 및 워크숍</div>
+        </div>
+        <div class="p-2.5 rounded-lg bg-white border border-slate-200 text-center">
+          <div class="text-xl font-bold text-emerald-700">4,400h+</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">누적 실무 교육·코칭 시간</div>
+        </div>
+      </div>
+    </div>
+    <div class="pt-2.5 border-t border-slate-200">
+      <div class="font-bold text-slate-700 mb-1.5">Core Tech Stack</div>
+      <div class="flex flex-wrap gap-1.5 text-[11px]">
+        <span class="px-2 py-0.5 rounded bg-white border border-slate-300 text-slate-700 font-medium">Python (Flask · FastAPI · Django)</span>
+        <span class="px-2 py-0.5 rounded bg-white border border-slate-300 text-slate-700 font-medium">JS / Svelte / React</span>
+        <span class="px-2 py-0.5 rounded bg-white border border-slate-300 text-slate-700 font-medium">Golang</span>
+        <span class="px-2 py-0.5 rounded bg-white border border-slate-300 text-slate-700 font-medium">Git / GitHub Actions</span>
+        <span class="px-2 py-0.5 rounded bg-white border border-slate-300 text-slate-700 font-medium">Data & Web Architecture</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-span-7 flex flex-col justify-between space-y-2.5">
+    <div class="p-3.5 rounded-xl bg-white border border-slate-200 space-y-2">
+      <div class="font-bold text-slate-800 text-sm mb-1">주요 경력 (Professional Journey)</div>
+      <div class="flex items-start justify-between border-b border-slate-100 pb-1.5">
+        <div>
+          <span class="font-bold text-slate-900">KickcodePlus (킥코드플러스) 대표</span>
+          <div class="text-slate-600 mt-0.5">기업 맞춤형 IT·AI 기술 강의, 웹 서비스 개발 및 기술 컨설팅</div>
+        </div>
+        <span class="text-slate-400 font-medium shrink-0 ml-2">2024 – 현재</span>
+      </div>
+      <div class="flex items-start justify-between border-b border-slate-100 pb-1.5">
+        <div>
+          <span class="font-bold text-slate-900">국민대학교 출강 강사 (Lecturer)</span>
+          <div class="text-slate-600 mt-0.5">디지털 마케팅 프로그래밍 및 데이터·웹 구현 실무 강의</div>
+        </div>
+        <span class="text-slate-400 font-medium shrink-0 ml-2">2022 – 현재</span>
+      </div>
+      <div class="flex items-start justify-between border-b border-slate-100 pb-1.5">
+        <div>
+          <span class="font-bold text-slate-900">프리랜스 소프트웨어 엔지니어 & 테크 인스트럭터</span>
+          <div class="text-slate-600 mt-0.5">웹 아키텍처, 소프트웨어 엔지니어링, 데이터 사이언스 개발 및 기업 교육</div>
+        </div>
+        <span class="text-slate-400 font-medium shrink-0 ml-2">2016 – 2024</span>
+      </div>
+      <div class="flex items-start justify-between">
+        <div>
+          <span class="font-bold text-slate-900">패스트캠퍼스 (Fastcampus)</span>
+          <div class="text-slate-600 mt-0.5">백엔드 프로그래밍 스쿨 과정 기획 및 운영</div>
+        </div>
+        <span class="text-slate-400 font-medium shrink-0 ml-2">2016</span>
+      </div>
+    </div>
+
+    <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-200">
+      <div class="font-bold text-blue-900 text-xs mb-1.5">주요 출강 기업 및 교육 파트너 (Trusted Clients & Partners)</div>
+      <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-700">
+        <div>
+          <span class="font-bold text-slate-800">주요 기업:</span> 삼성전자, LG전자, 카카오, KB국민카드, 신한투자증권, 11번가 등
+        </div>
+        <div>
+          <span class="font-bold text-slate-800">교육기관·대학:</span> 패스트캠퍼스, 데이원컴퍼니, 업스테이지, SeSAC, 성균관대, 국민대, 가톨릭대 등
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+[Slide 0-2 · 강사 소개 (최우영 — https://withgoru.github.io/about/ 기반)]
+- 강사: 최우영 (Owner of KickcodePlus | Web Developer | Lecturer)
+- 주요 이력: 290+ 기업·대학 강의 및 워크숍, 4,400+ 시간 교육, 삼성전자·LG전자·카카오·KB국민카드·신한투자증권 등 다수 기업 특강 진행
+-->
+
 
 ---
 
