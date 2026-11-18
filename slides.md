@@ -298,6 +298,181 @@ CONFIG = {
 -->
 
 ---
+
+# [Module 2] 전통적 개발방법론이 남긴 교훈과 초기 바이브코딩의 함정
+## 소프트웨어 공학의 대원칙: "코드를 치기 전에 설계 기준이 있어야 고칠 수 있다" (Slide 2-1)
+
+<div class="mt-3 text-sm">
+
+| 구분 | 폭포수 (Waterfall) | 애자일 (Agile) | 초기 바이브코딩 (Ad-hoc) | **SDD 기반 바이브코딩** |
+| :--- | :--- | :--- | :--- | :--- |
+| **작업 순서** | 완벽한 설계 → 구현 | 최소 설계 → 반복 구현 | **설계 생략 → 즉시 구현** | **핵심 명세(Spec) → AI 구현** |
+| **초기 구현 속도** | 매우 느림 | 빠름 | 매우 빠름 | 빠름 |
+| **유지보수 안정성** | 높음 (설계서 존재) | 높음 (규율·테스트 존재) | **매우 낮음 (수정 시 붕괴)** | **높음 (명세 기준 통제)** |
+| **현업 비개발자 적합도** | 부적합 (전문 설계 필요) | 보통 (개발 프로세스 숙지) | 시작은 쉬우나 운영 불가 | **최적 (자연어 명세로 통제)** |
+
+</div>
+
+<div class="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs leading-relaxed">
+  <strong class="text-amber-800">현업 바이브코딩의 함정:</strong> 애자일의 '속도'만 가져오고 설계와 검증 기준을 통째로 생략한 상태 → 기준점(설계도)이 없으니 AI가 수정할 때마다 기존 코드를 제멋대로 덮어씀
+</div>
+
+<!--
+[Slide 2-1 · 전통적 개발방법론이 남긴 교훈과 초기 바이브코딩의 함정]
+- 핵심 내용: 소프트웨어 공학의 대원칙 = "코드를 치기 전에 설계 기준이 있어야 고칠 수 있다"
+- 현업 바이브코딩의 함정: 애자일의 '속도'만 가져오고 설계와 검증 기준을 통째로 생략한 상태 → 기준점(설계도)이 없으니 AI가 수정할 때마다 기존 코드를 제멋대로 덮어씀
+-->
+
+---
+
+# [Module 2] AI 시대의 해법: SDD (Spec-Driven Development, 명세 기반 개발)
+## 코더(Coder)에서 명세 작성자(Spec Writer)로의 역할 전환 (Slide 2-2)
+
+<div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs mt-2">
+  <strong>역할의 전환:</strong> 코드를 직접 타이핑하는 <strong>코더(Coder)</strong> → AI가 움직일 울타리를 설계하는 <strong>명세 작성자(Spec Writer)</strong>
+</div>
+
+<div class="font-bold text-xs text-slate-600 mt-3 mb-1.5">SDD(명세 기반 개발)의 3대 핵심 요소 (<code>SPEC.md</code>)</div>
+
+<div class="grid grid-cols-3 gap-3 text-xs">
+  <div class="p-3 rounded-xl bg-blue-50 border border-blue-200">
+    <div class="font-bold text-blue-800 text-sm mb-1">1. 무엇을 구현/변경할 것인가</div>
+    <div class="text-blue-700 font-semibold mb-1">(요구사항)</div>
+    <div class="text-slate-700 leading-relaxed">화면 구성, 사용자 입력, 계산 공식</div>
+  </div>
+  <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+    <div class="font-bold text-amber-800 text-sm mb-1">2. 어떤 규칙을 절대 깨뜨리면 안 되는가</div>
+    <div class="text-amber-700 font-semibold mb-1">(불변 제약조건)</div>
+    <div class="text-slate-700 leading-relaxed">기존 API 경로, 데이터 컬럼명, 유지해야 할 기존 기능 목록</div>
+  </div>
+  <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+    <div class="font-bold text-emerald-800 text-sm mb-1">3. 무엇이 되면 정상인가</div>
+    <div class="text-emerald-700 font-semibold mb-1">(완료 기준)</div>
+    <div class="text-slate-700 leading-relaxed">정상 데이터 출력 결과 및 결측치·0건 조회 시 기대 동작</div>
+  </div>
+</div>
+
+<div class="mt-3 p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-center font-semibold text-blue-900">
+  "감(Vibe)으로 시키는 바이브코딩에서, 명세(Spec)로 통제하는 SDD로 넘어가야 운영이 가능합니다."
+</div>
+
+<!--
+[Slide 2-2 · AI 시대의 해법: SDD (Spec-Driven Development, 명세 기반 개발)]
+- 핵심 전환 메시지: "감(Vibe)으로 시키는 바이브코딩에서, 명세(Spec)로 통제하는 SDD로 넘어가야 운영이 가능합니다."
+-->
+
+---
+
+# [Module 2] 비전공자 바이브코딩 7대 실수 패턴과 교정 원칙 (1/2)
+## 현업에서 가장 자주 발생하는 프롬프팅·대화 관리 실수 (Slide 2-3)
+
+<div class="mt-2 text-xs">
+
+| # | 흔히 하는 실수 (Anti-Pattern) | 발생하는 문제 | 바로잡는 원칙 (Best Practice) |
+| :--- | :--- | :--- | :--- |
+| **1** | **"한 번에 다 해줘" 프롬프팅**<br>(기능 5개를 한 번에 지시) | 로직이 한 함수에 뒤엉키고 일부 요구사항이 누락됨 | **기능 단위 수직 분할 (Vertical Slicing):**<br>화면 뼈대 → 데이터 연동 → 필터 → 차트 순 1개씩 검증 |
+| **2** | **무지성 전체 덮어쓰기**<br>(`# ...기존 코드 생략...` 그대로 복붙) | 멀쩡하던 기존 함수·로직이 통째로 날아감 | **스냅샷 백업 & 생략 금지 강제:**<br>수정 전 저장 + *"코드 생략(`...`) 없이 전체 출력"* 지시 |
+| **3** | **무맥락 오류 투척**<br>(*"버튼이 안 돼요, 고쳐주세요"*) | AI가 원인을 추측(환각)해 정상 코드까지 갈아엎음 | **3종 세트 버그 리포트:**<br>`[증상 + 브라우저/서버 에러 로그 전체 + 해당 코드]` |
+| **4** | **망가진 대화창 무한 연장**<br>(오류 루프에 빠진 채 20~30턴 지속) | 과거의 오염된 맥락 때문에 고치면 다른 곳이 깨짐 | **3-Strike 리셋 규칙:**<br>3번 안에 못 고치면 새 채팅창에 `SPEC` + 깨끗한 코드로 재시작 |
+
+</div>
+
+<!--
+[Slide 2-3 · 비전공자 바이브코딩 7대 실수 패턴과 교정 원칙 (1/2)]
+- 패턴 1: "한 번에 다 해줘" 프롬프팅 → 기능 단위 수직 분할 (Vertical Slicing)
+- 패턴 2: 무지성 전체 덮어쓰기 → 스냅샷 백업 & 생략 금지 강제
+- 패턴 3: 무맥락 오류 투척 → 3종 세트 버그 리포트
+- 패턴 4: 망가진 대화창 무한 연장 → 3-Strike 리셋 규칙
+-->
+
+---
+
+# [Module 2] 비전공자 바이브코딩 7대 실수 패턴과 교정 원칙 (2/2)
+## 구조 분리·예외 데이터 방어·보안 원칙 (Slide 2-4)
+
+<div class="mt-2 text-xs">
+
+| # | 흔히 하는 실수 (Anti-Pattern) | 발생하는 문제 | 바로잡는 원칙 (Best Practice) |
+| :--- | :--- | :--- | :--- |
+| **5** | **화면·로직·기준값 뒤섞기**<br>(코드 중간에 임계값·컬럼명 하드코딩) | 공정 기준 하나 바꿀 때도 코드 전체를 뜯어고쳐야 함 | **최상단 설정 격리 (`Top-level CONFIG`):**<br>컬럼명·임계값·경로는 파일 맨 위 `CONFIG`에 모두 분리 |
+| **6** | **정상 데이터(Happy Path)만 테스트**<br>(깔끔한 샘플 10줄만 넣고 배포) | 현업 데이터의 결측치(`NaN`)·0 나누기에서 서버 즉시 중단 | **악성 데이터 방어 처리 지시:**<br>배포 전 결측치·조회 0건·타입 오류 예외 처리 일괄 점검 |
+| **7** | **사내 실제 데이터·인증키 평문 입력**<br>(실제 데이터 행 및 DB 비밀번호 복붙) | 사내 데이터 외부 유출 및 브라우저 소스 내 키 노출 | **스키마만 전달 & 키 분리:**<br>실제 값 대신 컬럼명+가짜 샘플 3줄 전달, 키는 환경변수 처리 |
+
+</div>
+
+<!--
+[Slide 2-4 · 비전공자 바이브코딩 7대 실수 패턴과 교정 원칙 (2/2)]
+- 패턴 5: 화면·로직·기준값 뒤섞기 → 최상단 설정 격리 (Top-level CONFIG)
+- 패턴 6: 정상 데이터(Happy Path)만 테스트 → 악성 데이터 방어 처리 지시
+- 패턴 7: 사내 실제 데이터·인증키 평문 입력 → 스키마만 전달 & 키 분리
+-->
+
+---
+
+# [Module 2] [실전 처방] 문서 없는 기존 프로젝트에 스펙 심기
+## Reverse-Spec Extraction — 3분 만에 SDD 체제로 전환하는 마스터 역추출 프롬프트 (Slide 2-5)
+
+- 코드만 있고 문서가 없는 기존 서비스도 **코드 수정을 잠근 역추출 프롬프트**를 한 번 실행하면 3분 만에 SDD 체제로 전환 가능
+
+```text
+너는 시니어 소프트웨어 아키텍트야. 아래 코드는 현재 운영 중인 사내 웹 서비스 코드인데 설계 문서가 없어.
+앞으로 안전하게 유지보수할 수 있도록 기준 문서인 `SPEC.md`를 작성해 줘.
+
+[중요 제약조건]
+- 코드를 한 줄도 수정하거나 개선하지 말고, 오직 현재 코드의 동작 사실만 정확히 분석할 것.
+- 개발 용어는 괄호 안에 비전공자도 이해할 수 있는 쉬운 풀이를 덧붙일 것.
+
+[SPEC.md 필수 포함 항목]
+1. 서비스 한 줄 요약 및 핵심 사용자 흐름 (화면 조작 순서)
+2. 코드 구조 맵: 화면 요소 고유 좌표(id/class) 및 백엔드 Python 핵심 함수 입출력 요약
+3. 데이터 입출력 규칙: 참조 데이터셋명, 필수 컬럼명, 계산 공식
+4. 코드 내부에 하드코딩된 설정값 목록 (경로, 컬럼명, 임계값 위치 나열)
+5. 절대 깨지면 안 되는 핵심 불변 규칙 (프론트-백엔드 간 API 경로, JSON 키 이름 등)
+
+[현재 코드]
+(기존 HTML / JS / Python 코드 붙여넣기)
+```
+
+<!--
+[Slide 2-5 · [실전 처방] 문서 없는 기존 프로젝트에 스펙 심기 (Reverse-Spec Extraction)]
+- 코드만 있고 문서가 없는 기존 서비스도 코드 수정을 잠근 역추출 프롬프트를 한 번 실행하면 3분 만에 SDD 체제로 전환 가능
+- 마스터 역추출 프롬프트 전문 수록
+-->
+
+---
+
+# [Module 2] 추출한 `SPEC.md` 실무 운영 3단계 루프
+## 역추출 → 현업 도메인 교정 → 수정 완료 후 스펙 동기화 (Slide 2-6)
+
+<div class="grid grid-cols-3 gap-3 mt-2 mb-3 text-xs">
+  <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+    <div class="font-bold text-slate-800 text-sm mb-1">1단계 · 역추출 (AI)</div>
+    <div class="text-slate-600 leading-relaxed">마스터 프롬프트로 현재 코드에서 <code>SPEC.md</code> 초안 추출</div>
+  </div>
+  <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+    <div class="font-bold text-amber-800 text-sm mb-1">2단계 · 현업 도메인 교정 (사람)</div>
+    <div class="text-slate-700 leading-relaxed">비전공자 담당자가 한국어 <code>SPEC.md</code>를 읽으며 <em>"이 판정 공식은 원래 이렇게 계산해야 해"</em>처럼 업무 로직 오류를 텍스트로 직접 교정</div>
+  </div>
+  <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+    <div class="font-bold text-emerald-800 text-sm mb-1">3단계 · 수정 후 스펙 동기화 (AI)</div>
+    <div class="text-slate-700 leading-relaxed">기능 추가나 버그 수정이 끝날 때마다 코드와 문서가 다시 어긋나지 않도록 <code>SPEC.md</code>와 변경 이력(Changelog)을 함께 업데이트</div>
+  </div>
+</div>
+
+<div class="font-bold text-xs text-slate-600 mb-1">스펙 동기화 마무리 프롬프트 전문 (Verbatim)</div>
+
+```text
+방금 우리가 수정한 코드 내용을 반영해서, 기존 `SPEC.md`의 변경된 부분만 업데이트해 줘.
+맨 아래에 '변경 이력(Changelog)' 섹션을 만들고 오늘 날짜와 수정 사유 한 줄을 기록해 줘.
+```
+
+<!--
+[Slide 2-6 · 추출한 SPEC.md 실무 운영 3단계 루프]
+- 1단계: 역추출 (AI) → 2단계: 현업 도메인 교정 (사람) → 3단계: 수정 완료 후 스펙 동기화 (AI)
+- 스펙 동기화 마무리 프롬프트 전문 수록
+-->
+
+---
 layout: center
 class: text-left
 ---
