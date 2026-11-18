@@ -160,3 +160,10 @@ body.dark {
   max-width: 100% !important;
   height: auto !important;
 }
+
+/* Hide Slidev goto dialog page index list (//*[@id="slidev-goto-dialog"]/div[2]) */
+#slidev-goto-dialog > div:nth-child(2),
+#slidev-goto-dialog .autocomplete-list {
+  display: none !important;
+  visibility: hidden !important;
+}
