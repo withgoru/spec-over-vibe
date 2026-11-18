@@ -145,7 +145,7 @@ body.dark {
   color: #0f172a !important;
 }
 
-/* Constrain Mermaid diagrams so they never overflow the slide */
+/* Constrain Mermaid diagrams so they never overflow or get distorted by layout rules */
 .slidev-layout .mermaid {
   display: flex !important;
   justify-content: center !important;
@@ -159,6 +159,14 @@ body.dark {
   width: auto !important;
   max-width: 100% !important;
   height: auto !important;
+}
+
+.slidev-layout .mermaid p,
+.slidev-layout .mermaid div,
+.slidev-layout .mermaid span {
+  margin: 0 !important;
+  line-height: 1.25 !important;
+  font-size: 12px !important;
 }
 
 /* Hide Slidev goto dialog page index list (//*[@id="slidev-goto-dialog"]/div[2]) */

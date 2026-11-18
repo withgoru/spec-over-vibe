@@ -26,37 +26,56 @@ transition: slide-left
 
 - **바이브코딩 서비스가 블랙박스처럼 느껴지는 이유:** 화면(Browser)과 연산(Server)의 경계를 모른 채 코드 전체를 하나의 덩어리로 보기 때문
 
-<div class="grid grid-cols-2 gap-4 mt-3 items-center">
-  <div class="space-y-2 text-sm">
-    <div class="font-bold text-sm mb-1">웹 서비스의 4단계 대화 사이클 (Request–Response Cycle)</div>
-    <div class="p-2 rounded bg-slate-100">
-      <strong>1. 사용자 액션 (Event):</strong> 브라우저에서 '조회' 버튼 클릭 또는 조건 선택
-    </div>
-    <div class="p-2 rounded bg-blue-50">
-      <strong>2. 요청 전송 (Request):</strong> 브라우저(클라이언트)가 서버에 필요한 조건을 담아 데이터 요청
-    </div>
-    <div class="p-2 rounded bg-amber-50">
-      <strong>3. 데이터 연산 (Backend Logic):</strong> 서버(Dataiku Python)가 데이터셋 조회·필터링·계산 수행
-    </div>
-    <div class="p-2 rounded bg-emerald-50">
-      <strong>4. 응답 및 화면 갱신 (Response & Render):</strong> 서버가 결과(JSON)를 돌려주면 브라우저가 화면 일부만 다시 그림
-    </div>
+<div class="font-bold text-xs text-slate-600 mt-2 mb-1.5">웹 서비스의 4단계 대화 사이클 (Request–Response Cycle)</div>
+
+<div class="grid grid-cols-4 gap-2.5 text-xs">
+  <div class="p-2.5 rounded-lg bg-slate-100 border border-slate-200">
+    <div class="font-bold text-slate-800 mb-0.5">1. 사용자 액션 (Event)</div>
+    <div class="text-slate-600 leading-snug">브라우저에서 '조회' 버튼 클릭 또는 조건 선택</div>
   </div>
-  <div>
+  <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200">
+    <div class="font-bold text-blue-800 mb-0.5">2. 요청 전송 (Request)</div>
+    <div class="text-slate-700 leading-snug">브라우저(클라이언트)가 서버에 필요한 조건을 담아 데이터 요청</div>
+  </div>
+  <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200">
+    <div class="font-bold text-amber-800 mb-0.5">3. 데이터 연산 (Backend Logic)</div>
+    <div class="text-slate-700 leading-snug">서버(Dataiku Python)가 데이터셋 조회·필터링·계산 수행</div>
+  </div>
+  <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200">
+    <div class="font-bold text-emerald-800 mb-0.5">4. 응답 및 화면 갱신 (Response & Render)</div>
+    <div class="text-slate-700 leading-snug">서버가 결과(JSON)를 돌려주면 브라우저가 화면 일부만 다시 그림</div>
+  </div>
+</div>
 
-```mermaid {scale: 0.82}
-flowchart TB
-  B["브라우저: 사용자 화면<br/>(HTML / CSS / JS)"]
-  S["서버: Dataiku 백엔드<br/>(Python Pandas / Flask)"]
-  D[("Dataiku 데이터셋")]
-
-  B -->|"① 버튼 클릭 후 JS가 Request 전송"| S
-  S -->|"② 데이터셋 조회·계산"| D
-  D --> S
-  S -->|"③ 계산 결과(JSON) Response 반환"| B
-  B -->|"④ JS가 결과값으로 표/차트만 갱신"| B
-```
-
+<div class="mt-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+  <div class="text-xs font-bold text-slate-500 mb-2.5">요청·응답 흐름 다이어그램 (Request–Response Flow)</div>
+  <div class="grid grid-cols-11 gap-2 items-center text-xs">
+    <div class="col-span-3 p-3 rounded-lg bg-white border-2 border-blue-500 shadow-sm text-center">
+      <div class="font-bold text-blue-700 text-sm">브라우저: 사용자 화면</div>
+      <div class="text-slate-500 mt-0.5">(HTML / CSS / JS)</div>
+      <div class="mt-2 pt-1.5 border-t border-emerald-200 bg-emerald-50 rounded px-2 py-1 text-emerald-800 font-semibold">
+        ④ JS가 결과값으로 표/차트만 갱신
+      </div>
+    </div>
+    <div class="col-span-3 flex flex-col justify-center space-y-2 px-1">
+      <div class="p-1.5 rounded bg-blue-100/80 border border-blue-300 text-blue-900 text-center font-medium">
+        ① 버튼 클릭 후 JS가 <code>Request</code> 전송 →
+      </div>
+      <div class="p-1.5 rounded bg-emerald-100/80 border border-emerald-300 text-emerald-900 text-center font-medium">
+        ← ③ 계산 결과(JSON) <code>Response</code> 반환
+      </div>
+    </div>
+    <div class="col-span-3 p-3 rounded-lg bg-white border-2 border-amber-500 shadow-sm text-center">
+      <div class="font-bold text-amber-700 text-sm">서버: Dataiku 백엔드</div>
+      <div class="text-slate-500 mt-0.5">(Python Pandas / Flask)</div>
+      <div class="mt-2 pt-1.5 border-t border-amber-200 bg-amber-50 rounded px-2 py-1 text-amber-900 font-semibold">
+        ② 데이터셋 조회·계산 수행
+      </div>
+    </div>
+    <div class="col-span-2 p-2.5 rounded-lg bg-slate-100 border-2 border-slate-400 text-center">
+      <div class="font-bold text-slate-700">Dataiku<br/>데이터셋</div>
+      <div class="text-[11px] text-slate-500 mt-1">원본 테이블<br/>조회 ⇄ 반환</div>
+    </div>
   </div>
 </div>
 
