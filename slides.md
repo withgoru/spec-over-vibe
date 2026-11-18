@@ -702,6 +702,144 @@ CONFIG = {
 -->
 
 ---
+
+# [Module 4] 장애 격리(Fault Isolation) — 오류 발생 지점 이분법 진단
+## 서비스가 멈췄을 때 30초 만에 범인이 화면(Browser)인지 서버(Python)인지 가르는 진단 트리 (Slide 4-1)
+
+<div class="mt-2 p-2.5 rounded-xl bg-slate-100 border border-slate-300 text-center text-xs font-bold text-slate-800">
+  🚨 출발: [장애 발생 — 화면이 안 나오거나 버튼이 먹통일 때] &nbsp;→&nbsp; 브라우저에서 <code>F12</code> (개발자 도구) 열기
+</div>
+
+<div class="grid grid-cols-2 gap-4 mt-3 text-xs">
+  <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-2">
+    <div class="font-bold text-amber-900 text-sm">분기 A · Console 빨간 에러 / Network 요청 미전송</div>
+    <div class="p-2 rounded bg-white border border-amber-200 font-bold text-amber-800 text-center">
+      ▶ 프론트엔드 (HTML / JS) 오류 확정
+    </div>
+    <div class="text-slate-700 leading-relaxed">
+      <strong>주요 원인:</strong><br/>
+      • HTML 버튼·테이블 <code>id</code> 좌표 불일치<br/>
+      • JavaScript 문법 오류 또는 이벤트 함수 연결 누락<br/>
+      • 서버에서 받은 JSON 키 이름 오타 (예: <code>yieldRate</code> vs <code>yield_rate</code>)
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-red-50 border border-red-200 space-y-2">
+    <div class="font-bold text-red-900 text-sm">분기 B · Network 탭 빨간 줄 (<code>Status 500</code> 등)</div>
+    <div class="p-2 rounded bg-white border border-red-200 font-bold text-red-800 text-center">
+      ▶ 백엔드 (Python / 데이터) 오류 확정 (요청은 갔으나 서버 에러)
+    </div>
+    <div class="text-slate-700 leading-relaxed">
+      <strong>즉시 조치:</strong><br/>
+      • Dataiku Webapp의 <strong><code>[Log]</code> 탭</strong> 열기<br/>
+      • Python Traceback의 <strong>'맨 아랫줄'</strong> 에러명 복사 후 AI에 전달
+    </div>
+  </div>
+</div>
+
+<div class="mt-3 p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-xs leading-relaxed">
+  <strong class="text-blue-800">강의 포인트:</strong> Python 에러 로그(Traceback)는 수십 줄이 쏟아지지만, 비전공자는 <strong>가장 맨 아랫줄 2줄(<code>KeyError</code>, <code>ZeroDivisionError</code>, <code>TypeError</code>)</strong>만 복사해서 AI에게 주면 됩니다.
+</div>
+
+<!--
+[Slide 4-1 · 장애 격리(Fault Isolation) — 오류 발생 지점 이분법 진단]
+> 강의 포인트: "Python 에러 로그(Traceback)는 수십 줄이 쏟아지지만, 비전공자는 가장 맨 아랫줄 2줄(KeyError, ZeroDivisionError, TypeError)만 복사해서 AI에게 주면 됩니다."
+-->
+
+---
+
+# [Module 4] 코드는 그대로인데 서비스가 죽는 주원인: 데이터 스키마 드리프트
+## 코드 수정 없이 갑자기 500 에러가 터지는 원인의 80% = 원본 데이터의 변화 (Slide 4-2)
+
+<div class="mt-3 text-xs">
+
+| 데이터 변화 유형 | 현업 발생 사례 | 서버에서 터지는 Python 에러 | 사전 방어 코딩 패턴 |
+| :--- | :--- | :--- | :--- |
+| **컬럼명 변경** | 원본 엑셀/DB의 `GOOD_CNT`가 `GOOD_QTY`로 변경 | `KeyError: 'GOOD_CNT'` | 시작 시 필수 컬럼 존재 여부 검증 및 안내 메시지 반환 |
+| **결측치(`Null`/`NaN`) 유입** | 미측정 배치의 수량 칸이 비어 있음 | `TypeError: unsupported operand type(s) for /: 'NoneType'` | 연산 전 `fillna(0)` 또는 `None` 체크 방어 로직 필수 |
+| **0 나누기 (`0` 유입)** | 가동 중단 배치의 총 생산수량(`TOTAL`)이 `0` | `ZeroDivisionError: division by zero` | 분모가 `0`일 때 `0.0`을 반환하는 조건문 추가 |
+| **조건 일치 0건** | 해당 날짜에 생산 데이터가 0건 조회됨 | 빈 배열 통계 계산 시 `IndexError` / `NaN` JSON 오류 | `if len(df) == 0:` 시 빈 결과 안내 응답 분기 처리 |
+
+</div>
+
+<!--
+[Slide 4-2 · 코드는 그대로인데 서비스가 죽는 주원인: 데이터 스키마 드리프트]
+- 어제까지 멀쩡히 돌아가던 웹 서비스가 코드 수정 없이 갑자기 500 에러를 뿜는 원인의 80% = 원본 데이터의 변화(Data Schema Drift)
+-->
+
+---
+
+# [Module 4] 회귀 버그(Regression Bug) 예방과 현업 수정 요청(CR) 3분류 기준
+## 수정 크기에 따라 안전 절차의 강도를 다르게 적용하는 운영 원칙 (Slide 4-3)
+
+<div class="p-3 rounded-lg bg-red-50 border border-red-200 text-xs mt-2 mb-3 leading-relaxed">
+  <strong class="text-red-800">회귀 버그 (Regression Bug):</strong> 기능 A를 고쳤는데 전혀 상관없어 보이던 기능 B가 망가지는 현상 (함수 간 강한 결합도 또는 AI의 코드 생략·덮어쓰기로 발생)
+</div>
+
+<div class="font-bold text-xs text-slate-600 mb-2">현업 사용자 수정 요청(CR) 3단계 분류 및 대응 기준</div>
+
+<div class="grid grid-cols-3 gap-3 text-xs">
+  <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-1.5">
+    <div class="font-bold text-amber-900 text-sm">등급 1 · 긴급 버그 수정 (Hotfix)</div>
+    <div class="text-slate-600"><strong>대상:</strong> 기존 기능 오작동 · 500 에러</div>
+    <div class="pt-1.5 border-t border-amber-200 text-slate-800 font-medium leading-relaxed">
+      즉시 로그 격리 진단 → 최소 범위 수정 후 <code>Commit</code>
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 space-y-1.5">
+    <div class="font-bold text-blue-900 text-sm">등급 2 · 단순 UI·기준값 개선 (Minor)</div>
+    <div class="text-slate-600"><strong>대상:</strong> 문구 수정, 색상 변경, <code>CONFIG</code> 임계값 조정</div>
+    <div class="pt-1.5 border-t border-blue-200 text-slate-800 font-medium leading-relaxed">
+      <code>CONFIG</code> 또는 CSS만 수정 (핵심 데이터 로직 접촉 금지)
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5">
+    <div class="font-bold text-emerald-900 text-sm">등급 3 · 신규 기능 추가 (Feature)</div>
+    <div class="text-slate-600"><strong>대상:</strong> 새 차트, 새 계산 컬럼, 필터 추가</div>
+    <div class="pt-1.5 border-t border-emerald-200 text-slate-800 font-medium leading-relaxed">
+      <strong>반드시 새 <code>Branch</code> 생성 → <code>SPEC.md</code> 기반 <code>Plan-Before-Code</code> → 테스트 후 <code>Merge</code></strong>
+    </div>
+  </div>
+</div>
+
+<!--
+[Slide 4-3 · 회귀 버그(Regression Bug) 예방과 현업 수정 요청(CR) 3분류 기준]
+- 등급 1(Hotfix), 등급 2(Minor), 등급 3(Feature)별 차별화된 유지보수 통제 기준
+-->
+
+---
+
+# [Module 4] 배포 전·후 웹 서비스 운영·유지보수 최종 체크리스트
+## 실무 투입 및 수정 배포 시 반드시 점검해야 할 5대 안전 항목 (Slide 4-4)
+
+<div class="space-y-2.5 mt-3 text-xs">
+  <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3">
+    <span class="px-2.5 py-1 rounded-md bg-blue-100 text-blue-800 font-bold shrink-0">1. 설계·문서</span>
+    <span class="text-slate-800 font-medium">현재 서비스의 기준 문서(<code>SPEC.md</code>)가 존재하며, 이번 수정 사항이 반영되었는가?</span>
+  </div>
+  <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3">
+    <span class="px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-800 font-bold shrink-0">2. 설정 분리</span>
+    <span class="text-slate-800 font-medium">데이터셋 이름, 컬럼명, 판정 임계값, 경로가 코드 중간이 아닌 최상단 <code>CONFIG</code>에 모여 있는가?</span>
+  </div>
+  <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3">
+    <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 font-bold shrink-0">3. 예외 방어</span>
+    <span class="text-slate-800 font-medium">결측치(<code>Null</code>), 분모 <code>0</code>, 조회 결과 <code>0건</code> 데이터를 넣었을 때 서버가 500 에러로 뻗지 않는가?</span>
+  </div>
+  <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3">
+    <span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 font-bold shrink-0">4. 버전 관리</span>
+    <span class="text-slate-800 font-medium">수정 전 정상 시점의 <code>Commit</code>이 기록되어 있고, 수정 후 <code>Diff</code>로 무단 삭제된 코드가 없는지 확인했는가?</span>
+  </div>
+  <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3">
+    <span class="px-2.5 py-1 rounded-md bg-rose-100 text-rose-800 font-bold shrink-0">5. 장애 대비</span>
+    <span class="text-slate-800 font-medium">장애 발생 시 브라우저 <code>F12</code>와 서버 <code>Log</code> 탭에서 에러 메시지를 확인할 수 있는 상태인가?</span>
+  </div>
+</div>
+
+<!--
+[Slide 4-4 · 배포 전·후 웹 서비스 운영·유지보수 최종 체크리스트]
+- 5대 최종 점검표: [설계·문서], [설정 분리], [예외 방어], [버전 관리], [장애 대비]
+-->
+
+---
 layout: center
 class: text-left
 ---
