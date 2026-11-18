@@ -840,6 +840,217 @@ CONFIG = {
 -->
 
 ---
+
+# [Live Demo] 라이브 시연 소개: 초간단 샘플 앱 (`공정 배치 수율 판정기`)
+## "고장 내고 → 원인 찾고(F12 · 로그 · Diff) → 프롬프트로 안전하게 고치기" (Slide D-0)
+
+<div class="grid grid-cols-12 gap-4 text-xs items-start">
+<div class="col-span-5 space-y-2.5">
+  <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+    <div class="font-bold text-slate-800 text-sm mb-1">시연 환경 (Dataiku 1:1 동일 구조)</div>
+    <div class="text-slate-600 leading-relaxed">Python(Flask) 백엔드 + HTML/JS 프론트엔드 + Git 버전 관리 (Dataiku Webapp 및 Version Control과 1:1 동일 구조)</div>
+  </div>
+  <div class="p-3 rounded-xl bg-blue-50 border border-blue-200 space-y-1.5">
+    <div class="font-bold text-blue-900 text-sm">초간단 샘플 코드 구조 (총 35줄 내외)</div>
+    <div class="text-slate-700 leading-relaxed">
+      <strong>• <code>app.py</code>:</strong> 배치 데이터 리스트를 받아 수율(<code>good / total * 100</code>)을 계산하고 <code>85.0</code> 이상이면 <code>"합격"</code>, 미만이면 <code>"불합격"</code>을 반환하는 초간단 서버
+    </div>
+    <div class="text-slate-700 leading-relaxed">
+      <strong>• <code>index.html</code>:</strong> <code>[전체 조회]</code> 버튼과 <code>[합격만 보기]</code> 필터 버튼, 그리고 결과를 보여주는 표(<code>id="yield-table"</code>) 1개로 구성된 화면
+    </div>
+  </div>
+</div>
+<div class="col-span-7">
+
+```python
+from flask import Flask, jsonify
+app = Flask(__name__)
+
+BATCH_DATA = [
+    {"batch": "B-01", "total": 100, "good": 92},
+    {"batch": "B-02", "total": 200, "good": 160},
+    {"batch": "B-03", "total": 150, "good": 141},
+]
+
+@app.route("/api/yield")
+def get_yield():
+    results = []
+    for row in BATCH_DATA:
+        # 판정 기준(85.0)과 컬럼명이 코드 중간에 하드코딩되어 있음
+        rate = round(row["good"] / row["total"] * 100, 1)
+        status = "합격" if rate >= 85.0 else "불합격"
+        results.append({"batch": row["batch"], "rate": rate, "status": status})
+    return jsonify(results)
+```
+
+</div>
+</div>
+
+<!--
+[Slide D-0 · 라이브 시연 소개: 초간단 샘플 앱 (공정 배치 수율 판정기)]
+- 시연 연출 핵심: 코드는 비전공자도 한눈에 읽을 수 있도록 20~35줄 내외의 극도로 단순한 샘플 앱을 사용합니다. 화려한 코딩이 아니라 "① 왜 고장 났는지 도구(F12 · 로그 · Diff)로 정확히 짚어내고 → ② 배운 프롬프트 공식으로 안전하게 해결하는 과정"을 라이브로 증명합니다.
+-->
+
+---
+
+# [Live Demo · Act 1] 문서 없는 레거시 앱 해부 & `SPEC.md` 역추출 + `CONFIG` 분리
+## 전임자가 남긴 하드코딩 레거시 코드를 3분 만에 SDD 체제로 전환하기 (Slide D-1 · 15분)
+
+<div class="p-2.5 rounded-xl bg-slate-100 border border-slate-300 text-xs mb-3">
+  <strong>🎬 상황 설정:</strong> 전임자가 바이브코딩으로 짜두고 간 문서 없는 초간단 앱. 판정 기준을 <code>85.0 → 90.0</code>으로 바꾸고 싶지만 어디를 고쳐야 할지 모르는 상태.
+</div>
+
+<div class="grid grid-cols-2 gap-4 text-xs">
+  <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-2">
+    <div class="font-bold text-amber-900 text-sm">1단계 · 원인 파악 (코드 독해)</div>
+    <div class="p-2.5 rounded-lg bg-white border border-amber-200 text-slate-700 leading-relaxed">
+      <strong>① 프론트엔드 좌표 확인:</strong><br/>
+      브라우저 <code>F12</code>로 <code>index.html</code>의 표 좌표(<code>id="yield-table"</code>)와 API 주소(<code>/api/yield</code>) 확인
+    </div>
+    <div class="p-2.5 rounded-lg bg-white border border-amber-200 text-slate-700 leading-relaxed">
+      <strong>② 백엔드 하드코딩 포착:</strong><br/>
+      <code>app.py</code>를 열어 <code>85.0</code>이라는 숫자와 <code>"good"</code>, <code>"total"</code> 컬럼명이 로직 한가운데 하드코딩되어 있음을 포착
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2">
+    <div class="font-bold text-emerald-900 text-sm">2단계 · 프롬프트 해결 (역추출 & 리팩토링)</div>
+    <div class="p-2.5 rounded-lg bg-white border border-emerald-200 text-slate-700 leading-relaxed">
+      <strong>[프롬프트 1 실행 · 역추출]</strong><br/>
+      Module 2의 <strong>마스터 역추출 프롬프트</strong>를 입력 → 20초 만에 <code>SPEC.md</code>(불변 규칙 + 하드코딩 위치 목록) 자동 생성
+    </div>
+    <div class="p-2.5 rounded-lg bg-white border border-emerald-200 text-slate-700 leading-relaxed">
+      <strong>[프롬프트 2 실행 · <code>CONFIG</code> 분리]</strong><br/>
+      <em>"추출된 <code>SPEC.md</code>의 4번 항목(하드코딩 목록)을 근거로, 기존 API 구조는 유지한 채 판정 기준치와 컬럼명을 파일 최상단 <code>CONFIG</code> 딕셔너리로 분리해 줘"</em> → 전환 후 <code>Commit</code>
+    </div>
+  </div>
+</div>
+
+<!--
+[Slide D-1 · Act 1 (15분): 문서 없는 레거시 앱 해부 & SPEC.md 역추출 + CONFIG 분리]
+- 1단계: 브라우저 F12로 id="yield-table" 및 /api/yield 확인, app.py 내 하드코딩 포착
+- 2단계: 마스터 역추출 프롬프트로 SPEC.md 생성 후 CONFIG 딕셔너리 분리 및 Commit
+-->
+
+---
+
+# [Live Demo · Act 2] 무맥락 지시로 기존 기능 증발 사고 유발 → Git `Diff` & `Revert`
+## 비전공자 실수 패턴 재현과 Git 타임머신을 활용한 3초 복구 시연 (Slide D-2 · 15분)
+
+<div class="p-2.5 rounded-xl bg-slate-100 border border-slate-300 text-xs mb-3">
+  <strong>🎬 상황 설정:</strong> 현업 요청 <em>"표 디자인이 너무 밋밋하니 좀 깔끔하게 고쳐주세요"</em>를 비전공자 실수 패턴(무맥락 지시 + 전체 덮어쓰기) 그대로 AI에게 입력.
+</div>
+
+<div class="grid grid-cols-3 gap-3 text-xs">
+  <div class="p-3.5 rounded-xl bg-red-50 border border-red-200 space-y-1.5">
+    <div class="font-bold text-red-900 text-sm">1단계 · 의도적 사고 유발</div>
+    <div class="text-slate-700 leading-relaxed">
+      AI가 테이블 스타일을 예쁘게 바꾸면서, 기존에 있던 <strong><code>[합격만 보기]</code> 필터 버튼과 JS 필터 함수를 통째로 삭제</strong>해 버림 (회귀 버그 발생)
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-1.5">
+    <div class="font-bold text-amber-900 text-sm">2단계 · 원인 파악 (Git <code>Diff</code> 검수)</div>
+    <div class="text-slate-700 leading-relaxed">
+      화면에서 필터 버튼이 사라진 것을 발견 → 즉시 Git <strong><code>Diff</code></strong> 화면 오픈<br/><br/>
+      초록색(<code>+</code>) 스타일 코드 아래에 <strong>빨간색(<code>-</code>) 줄로 기존 <code>filterPassOnly()</code> 함수가 삭제된 결정적 증거</strong>를 수강생과 함께 확인
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5">
+    <div class="font-bold text-emerald-900 text-sm">3단계 · 복구 및 안전 작업선 확보</div>
+    <div class="text-slate-700 leading-relaxed">
+      AI에게 다시 고쳐달라고 조르는 대신 Git <strong><code>Revert</code></strong> 클릭 한 번으로 3초 만에 정상 상태 복원<br/><br/>
+      이후 안전한 작업을 위해 새 <strong><code>Branch</code> (<code>feat/table-style</code>) 생성</strong> 후 범위 잠금 프롬프트로 스타일만 안전하게 적용
+    </div>
+  </div>
+</div>
+
+<!--
+[Slide D-2 · Act 2 (15분): 무맥락 지시로 기존 기능 증발 사고 유발 → Git Diff 포착 & Revert 복구]
+- 1단계: 무맥락 디자인 수정 지시로 [합격만 보기] 버튼 및 filterPassOnly() 삭제 사고 유발
+- 2단계: Git Diff에서 빨간색(-) 삭제 줄 확인
+- 3단계: Git Revert로 3초 복원 후 feat/table-style 브랜치에서 범위 잠금 프롬프트 적용
+-->
+
+---
+
+# [Live Demo · Act 3] 결측치·0 데이터 유입 500 장애 유발 → 로그 격리 & 버그 리포트 해결
+## F12 Network 탭과 서버 Traceback 맨 아랫줄로 30초 만에 원인 특정하기 (Slide D-3 · 15분)
+
+<div class="p-2.5 rounded-xl bg-slate-100 border border-slate-300 text-xs mb-3">
+  <strong>🎬 상황 설정:</strong> 원본 데이터셋(<code>BATCH_DATA</code>)에 현업에서 흔히 발생하는 불량 데이터 1행(<code>{"batch": "B-04", "total": 0, "good": None}</code>)이 유입된 상황.
+</div>
+
+<div class="grid grid-cols-3 gap-3 text-xs">
+  <div class="p-3.5 rounded-xl bg-red-50 border border-red-200 space-y-1.5">
+    <div class="font-bold text-red-900 text-sm">1단계 · 의도적 장애 유발</div>
+    <div class="text-slate-700 leading-relaxed">
+      브라우저에서 <code>[전체 조회]</code> 클릭 시 표가 아무것도 그려지지 않고 멈춤
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-1.5">
+    <div class="font-bold text-amber-900 text-sm">2단계 · 원인 파악 (장애 격리 이분법)</div>
+    <div class="text-slate-700 leading-relaxed">
+      <strong>① 브라우저 <code>F12</code> → <code>Network</code> 탭:</strong><br/>
+      <code>/api/yield</code> 요청이 빨간색 <strong><code>500 Internal Server Error</code></strong>로 실패 → <em>"화면 문제가 아니라 서버(Python) 문제다!"</em> 확정<br/><br/>
+      <strong>② 서버 실행 <code>Log</code> 탭:</strong><br/>
+      Python Traceback <strong>맨 아랫줄</strong>(<code>TypeError: unsupported operand type(s) for /: 'NoneType' and 'int'</code>)로 원인 특정
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5">
+    <div class="font-bold text-emerald-900 text-sm">3단계 · 프롬프트 해결 (Error-Driven)</div>
+    <div class="text-slate-700 leading-relaxed">
+      <strong>[프롬프트 실행]</strong><br/>
+      <code>[발생 현상 + 500 로그 및 Traceback 맨 아랫줄 + get_yield() 함수 코드]</code> 3종 세트를 넣고 <em>"바로 고치지 말고 원인 후보와 방어 대책부터 알려줘"</em> 지시 → <code>None</code> 결측치 처리 및 <code>total == 0</code> 방어 코드 적용 후 정상 출력 확인
+    </div>
+  </div>
+</div>
+
+<!--
+[Slide D-3 · Act 3 (15분): 결측치·0 데이터 유입으로 500 장애 유발 → 로그 격리 & 버그 리포트 해결]
+- 1단계: {"batch": "B-04", "total": 0, "good": None} 유입으로 장애 유발
+- 2단계: F12 Network 500 에러 및 서버 Log Traceback 맨 아랫줄 TypeError 확인
+- 3단계: 3종 세트 버그 리포트 및 Error-Driven 프롬프트로 방어 로직 적용
+-->
+
+---
+
+# [Live Demo · Act 4] SDD 기반 신규 기능 추가 (`불량률 %` 컬럼) & 스펙 동기화 완주
+## Plan-Before-Code → Guardrails → Git Diff & Merge → SPEC.md 동기화 (Slide D-4 · 15분)
+
+<div class="p-2.5 rounded-xl bg-slate-100 border border-slate-300 text-xs mb-3">
+  <strong>🎬 상황 설정:</strong> 운영 중인 앱에 <strong><code>불량률(%)</code> (<code>100 - 수율</code>) 컬럼을 추가</strong>해 달라는 신규 기능 요청(CR 등급 3) 접수.
+</div>
+
+<div class="grid grid-cols-3 gap-3 text-xs">
+  <div class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 space-y-1.5">
+    <div class="font-bold text-blue-900 text-sm">1단계 · 계획 승인 (<code>Plan-Before-Code</code>)</div>
+    <div class="text-slate-700 leading-relaxed">
+      작업 <code>Branch</code>에서 <code>SPEC.md</code>와 현재 코드를 함께 입력 → <em>"코드를 짜지 말고 수정할 위치와 기존 기능 영향 여부부터 5줄로 보고해 줘"</em> 실행<br/><br/>
+      AI가 제안한 수정 계획(<code>get_yield()</code> 반환 키 추가 + <code>index.html</code> 테이블 열 추가)을 눈으로 승인
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-1.5">
+    <div class="font-bold text-amber-900 text-sm">2단계 · 수정 범위 잠금 (<code>Guardrails</code>)</div>
+    <div class="text-slate-700 leading-relaxed">
+      <em>"승인한 계획대로 수정하되, 기존 <code>rate</code>(수율)와 <code>status</code>(합격 판정) 로직은 절대 건드리지 말고 수정 함수 전체를 생략 없이 출력해 줘"</em> 실행
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5">
+    <div class="font-bold text-emerald-900 text-sm">3단계 · 최종 검수 및 문서 동기화</div>
+    <div class="text-slate-700 leading-relaxed">
+      Git <code>Diff</code>로 의도한 줄만 정확히 추가되었는지 확인 → <code>main</code> 브랜치로 <strong><code>Merge</code></strong><br/><br/>
+      마무리로 <strong><code>SPEC.md</code> 동기화 프롬프트</strong>를 실행해 <code>불량률(%)</code> 스펙과 오늘 날짜 변경 이력(Changelog)을 기록하며 시연 종료
+    </div>
+  </div>
+</div>
+
+<!--
+[Slide D-4 · Act 4 (15분): SDD 기반 신규 기능 추가 (불량률 % 컬럼) & 스펙 동기화 완주]
+- 1단계: Plan-Before-Code로 수정 위치 및 영향도 5줄 보고 승인
+- 2단계: Guardrails 프롬프트로 기존 rate/status 로직 보호 및 전체 코드 출력
+- 3단계: Git Diff 검수 → main Merge → SPEC.md 및 Changelog 동기화 마무리
+-->
+
+---
 layout: center
 class: text-left
 ---
