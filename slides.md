@@ -1013,7 +1013,7 @@ def get_yield():
 
 ---
 
-# [Live Demo · Act 4] SDD 기반 신규 기능 추가 (`불량률 %` 컬럼) & 스펙 동기화 완주
+# [Live Demo · Act 4] SDD 기반 신규 기능 추가 (`불량률(%)` 컬럼) & 스펙 동기화 완주
 ## Plan-Before-Code → Guardrails → Git Diff & Merge → SPEC.md 동기화 (Slide D-4 · 15분)
 
 <div class="p-2.5 rounded-xl bg-slate-100 border border-slate-300 text-xs mb-3">
@@ -1044,7 +1044,7 @@ def get_yield():
 </div>
 
 <!--
-[Slide D-4 · Act 4 (15분): SDD 기반 신규 기능 추가 (불량률 % 컬럼) & 스펙 동기화 완주]
+[Slide D-4 · Act 4 (15분): SDD 기반 신규 기능 추가 (불량률(%) 컬럼) & 스펙 동기화 완주]
 - 1단계: Plan-Before-Code로 수정 위치 및 영향도 5줄 보고 승인
 - 2단계: Guardrails 프롬프트로 기존 rate/status 로직 보호 및 전체 코드 출력
 - 3단계: Git Diff 검수 → main Merge → SPEC.md 및 Changelog 동기화 마무리
