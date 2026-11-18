@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>공정 배치 수율 판정기</title>
+  <style>
+    body { font-family: sans-serif; max-width: 640px; margin: 40px auto; }
+    button { padding: 6px 12px; margin-right: 8px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h2>공정 배치 수율 판정기</h2>
+  <div>
+    <button id="btn-all" onclick="loadYield()">전체 조회</button>
+    <button id="btn-pass" onclick="filterPassOnly()">합격만 보기</button>
+  </div>
+  <table id="yield-table">
+    <thead>
+      <tr><th>배치 번호</th><th>수율(%)</th><th>판정 결과</th></tr>
+    </thead>
+    <tbody id="yield-tbody"></tbody>
+  </table>
+  <script>
+    let cachedRows = [];
+    function renderRows(rows) {
+      document.getElementById("yield-tbody").innerHTML = rows
+        .map(r => `<tr><td>${r.batch}</td><td>${r.rate}%</td><td>${r.status}</td></tr>`)
+        .join("");
+    }
+    async function loadYield() {
+      const res = await fetch("/api/yield");
+      cachedRows = await res.json();
+      renderRows(cachedRows);
+    }
+    function filterPassOnly() {
+      renderRows(cachedRows.filter(r => r.status === "합격"));
+    }
+  </script>
+</body>
+</html>
