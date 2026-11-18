@@ -493,6 +493,215 @@ CONFIG = {
 -->
 
 ---
+
+# [Module 3] 일반 외부 AI vs Dataiku Cobuild — 왜 안전벨트가 필수인가?
+## 프로젝트 파일을 직접 수정하는 Cobuild의 특성과 통제 장치 (Slide 3-1)
+
+<div class="mt-3 text-xs">
+
+| 비교 항목 | 외부 AI 도구 활용 (ChatGPT 등) | **Dataiku Cobuild 활용** |
+| :--- | :--- | :--- |
+| **작업 방식** | 대화창에서 코드 생성 후 **수동 복사·붙여넣기** | 프로젝트 내에서 **실제 Flow·레시피·Webapp을 직접 생성/수정** |
+| **데이터·구조 이해** | 사용자가 스키마와 코드를 매번 설명해야 함 | **프로젝트 내 데이터셋 스키마·Flow 맥락을 자동 인식** |
+| **실수 시 위험도** | 붙여넣기 전까지는 기존 서비스에 영향 없음 | **지시가 모호하면 작동 중인 기존 코드가 즉시 덮어씌워짐** |
+| **복구 및 추적 수단** | 사용자가 수동으로 백업 파일을 따로 저장해야 함 | **Dataiku 내장 Git(Version Control)으로 이력 추적 및 복구** |
+
+</div>
+
+<div class="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs leading-relaxed">
+  <strong class="text-amber-800">핵심 포인트:</strong> Cobuild는 프로젝트 파일을 직접 고쳐주는 유능한 조수입니다. 작업 지시서(<code>SPEC.md</code>)와 복구 장치(Git) 없이 구두로만 지시하면 멀쩡한 기능까지 한순간에 덮어쓸 수 있습니다.
+</div>
+
+<!--
+[Slide 3-1 · 일반 외부 AI vs Dataiku Cobuild — 왜 안전벨트가 필수인가?]
+> 강의 포인트: "Cobuild는 프로젝트 파일을 직접 고쳐주는 유능한 조수입니다. 작업 지시서(`SPEC.md`)와 복구 장치(Git) 없이 구두로만 지시하면 멀쩡한 기능까지 한순간에 덮어쓸 수 있습니다."
+-->
+
+---
+
+# [Module 3] 비전공자를 위한 Git 핵심 용어 ① — 기록과 복구
+## 터미널 명령어 없이 Dataiku 상단 `Version Control` 메뉴의 4가지 동작 의미만 파악 (Slide 3-2)
+
+<div class="mt-2 text-xs">
+
+| Git 핵심 용어 | 비전공자 눈높이 비유 | Dataiku 환경에서의 실제 용도와 의미 |
+| :--- | :--- | :--- |
+| **Repository (저장소)** | 프로젝트 전체가 담긴 **전용 금고** | Flow, 데이터셋 설정, Webapp(HTML/Python) 코드의 모든 변경 역사가 저장되는 공간. Dataiku는 프로젝트 생성 시 **내부 로컬 저장소**를 기본 제공 |
+| **Commit (커밋)** | 게임의 **'세이브 포인트'** | 특정 시점의 프로젝트 상태를 스냅샷으로 기록하는 행위. AI 수정 직전(정상 상태)과 직후(검증 완료)에 반드시 기준점을 남겨야 함 |
+| **Diff (변경점 비교)** | 수정 전후 **'틀린 그림 찾기'** | `History` 탭에서 두 커밋을 비교할 때 사용. 추가(`+`, 초록)·삭제(`-`, 빨강) 줄을 보여주어 **AI가 기존 기능을 몰래 지웠는지 10초 만에 검수** |
+| **Revert (되돌리기)** | 장애 시 누르는 **'타임머신'** | 특정 커밋의 변경을 취소하는 새 커밋을 생성해 이전 정상 상태로 안전 복원 (과거 기록을 지우지 않아 복구 이력까지 투명하게 보존) |
+
+</div>
+
+<!--
+[Slide 3-2 · 비전공자를 위한 Git 핵심 용어 ① — 기록과 복구 (내 프로젝트의 안전벨트)]
+- 터미널 명령어를 외울 필요 없이 Dataiku 상단 Version Control 메뉴의 4가지 동작(Repository, Commit, Diff, Revert) 의미만 파악
+-->
+
+---
+
+# [Module 3] 비전공자를 위한 Git 핵심 용어 ② — 실험·병합과 원격 동기화
+## 운영 서비스를 보호하는 평행우주(`Branch`)와 중앙 금고(`Remote`) 동기화 (Slide 3-3)
+
+<div class="mt-1 text-xs">
+
+| 구분 | Git 핵심 용어 | 비전공자 눈높이 비유 | 실제 용도와 타이밍 |
+| :--- | :--- | :--- | :--- |
+| **실험과 병합**<br>(운영 보호) | **Branch (브랜치)** | 운영 서비스를 보호하는 **'평행우주 작업선'** | 실제 사용자가 쓰는 `main` 줄기를 건드리지 않고 새 기능·리팩토링을 실험하는 독립 공간 |
+| **실험과 병합** | **Switch / Checkout** | 작업할 **평행우주 선택하기** | 현재 작업 중인 브랜치를 다른 브랜치로 전환 (예: `main` → `feat-defect-rate`) |
+| **실험과 병합** | **Merge (병합)** | 검증 끝난 실험 결과를 **본진에 합치기** | 테스트가 완료된 실험 브랜치의 수정 사항을 운영(`main`) 브랜치로 통합 |
+| **실험과 병합** | **Conflict (충돌)** | **"둘 중 뭘 살릴지 사람이 골라주세요"** | 두 브랜치(또는 두 사람)가 같은 코드 줄을 다르게 고쳤을 때 임의 덮어쓰기를 막는 안전장치 |
+| **원격 동기화**<br>(사내 Git 서버) | **Remote (원격 저장소)** | 사내 중앙 클라우드 금고 | Dataiku 외부의 중앙 Git 서버(GitHub/GitLab 등). 팀 공유 및 이중 백업용 |
+| **원격 동기화** | **Push / Fetch / Pull** | **업로드 / 미리보기 / 다운로드 반영** | `Push`(내 커밋 업로드), `Fetch`(변경 유무 확인만), `Pull`(동료 최신판 내려받아 합치기) |
+
+</div>
+
+<!--
+[Slide 3-3 · 비전공자를 위한 Git 핵심 용어 ② — 실험·병합과 원격 동기화]
+- 그룹 2 (실험과 병합): Branch, Switch / Checkout, Merge, Conflict
+- 그룹 3 (원격 동기화): Remote, Push / Fetch / Pull
+-->
+
+---
+
+# [Module 3] 상황별 Git 버튼 선택 가이드 & 5단계 표준 루틴
+## 현업 상황별 즉시 대응법과 Cobuild + SDD + Git 표준 유지보수 루틴 (Slide 3-4)
+
+<div class="space-y-1.5 mt-2 text-xs">
+  <div class="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
+    <span><strong>"Cobuild로 웹앱 기능을 대폭 고치려고 해요"</strong></span>
+    <span class="text-blue-700 font-semibold">→ 먼저 새 <code>Branch</code>를 생성해 <code>main</code>을 보호한 뒤 작업 시작</span>
+  </div>
+  <div class="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
+    <span><strong>"AI가 코드를 고쳤는데 뭔가 찝찝해요"</strong></span>
+    <span class="text-amber-700 font-semibold">→ <code>Version Control</code> → <code>Diff</code>를 열어 빨간색(<code>-</code>) 핵심 함수 삭제 여부 확인</span>
+  </div>
+  <div class="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
+    <span><strong>"AI 수정 후 웹앱이 하얗게 뻗고 에러가 나요"</strong></span>
+    <span class="text-red-700 font-semibold">→ 씨름하지 말고 직전 정상 커밋을 찾아 <code>Revert</code>로 3초 만에 원상복구</span>
+  </div>
+  <div class="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
+    <span><strong>"수정이 완벽히 끝났고 팀원에게 공유해야 해요"</strong></span>
+    <span class="text-emerald-700 font-semibold">→ 작업 브랜치를 <code>main</code>에 <code>Merge</code>한 뒤 <code>Push</code>로 중앙 서버 업로드</span>
+  </div>
+  <div class="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
+    <span><strong>"어제 동료가 고친 프로젝트에 이어서 작업할 거예요"</strong></span>
+    <span class="text-indigo-700 font-semibold">→ 무작정 수정부터 하지 말고 먼저 <code>Pull</code>을 눌러 최신 코드부터 반영</span>
+  </div>
+</div>
+
+<div class="mt-3 p-3 rounded-xl bg-blue-50/60 border border-blue-200">
+  <div class="text-xs font-bold text-blue-900 mb-2">Cobuild + SDD + Git 표준 5단계 유지보수 루틴</div>
+  <div class="grid grid-cols-5 gap-2 text-center text-xs">
+    <div class="p-2 rounded-lg bg-white border border-blue-200">
+      <div class="font-bold text-blue-800">1단계 · 작업 전 세이브</div>
+      <div class="text-[11px] text-slate-600 mt-0.5">정상 상태 <code>Commit</code> 확인</div>
+    </div>
+    <div class="p-2 rounded-lg bg-white border border-blue-200">
+      <div class="font-bold text-blue-800">2단계 · 명세 기반 지시</div>
+      <div class="text-[11px] text-slate-600 mt-0.5"><code>SPEC.md</code> 제약조건 주입</div>
+    </div>
+    <div class="p-2 rounded-lg bg-white border border-amber-200">
+      <div class="font-bold text-amber-800">3단계 · Diff 검수</div>
+      <div class="text-[11px] text-slate-600 mt-0.5">빨간색(<code>-</code>) 무단 삭제 체크</div>
+    </div>
+    <div class="p-2 rounded-lg bg-white border border-emerald-200">
+      <div class="font-bold text-emerald-800">4단계 · 테스트 & 분기</div>
+      <div class="text-[11px] text-slate-600 mt-0.5">성공 시 <code>Commit</code> / 실패 시 <code>Revert</code></div>
+    </div>
+    <div class="p-2 rounded-lg bg-white border border-slate-300">
+      <div class="font-bold text-slate-800">5단계 · SPEC 동기화</div>
+      <div class="text-[11px] text-slate-600 mt-0.5">변경 이력(<code>Changelog</code>) 기록</div>
+    </div>
+  </div>
+</div>
+
+<!--
+[Slide 3-4 · 상황별 Git 버튼 선택 가이드 & Cobuild+SDD+Git 5단계 표준 루틴]
+- 5가지 현업 상황별 Git 버튼(Branch, Diff, Revert, Merge+Push, Pull) 선택 가이드
+- Cobuild + SDD + Git 표준 5단계 유지보수 루틴 다이어그램
+-->
+
+---
+
+# [Module 3] 유지보수형 프롬프팅 3대 기법 ① — 계획 먼저 승인
+## Plan-Before-Code: 코드 생성 전에 수정 계획(Change Spec)부터 브리핑받기 (Slide 3-5)
+
+<div class="p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs mt-2 mb-3 leading-relaxed">
+  <strong class="text-blue-800">핵심 원리:</strong> AI가 코드를 짜기 전에 <em>"어느 파일의 어떤 좌표/함수를 왜 고칠 것인지"</em> 수정 계획(Change Spec)부터 브리핑하게 만들어 잘못된 방향의 수정을 코드 생성 전에 차단합니다.
+</div>
+
+<div class="font-bold text-xs text-slate-600 mb-1.5">프롬프트 템플릿 전문 (Verbatim)</div>
+
+```text
+아래 `SPEC.md`와 현재 코드를 참고해서 [요청 기능: 조회 결과 표에 '불량률(%)' 컬럼 추가]를 구현하려고 해.
+
+⚠️ 주의: 지금은 절대 코드를 작성하지 마.
+먼저 아래 3가지만 5줄 이내로 설명해 줘.
+1. 수정이 필요한 파일과 정확한 위치(HTML id 좌표 또는 Python 함수명)
+2. 기존 기능(수율 계산 및 합격 판정 배지)에 영향을 줄 가능성 여부
+3. 변경될 데이터 입출력(JSON 키) 구조
+```
+
+<!--
+[Slide 3-5 · 유지보수형 프롬프팅 3대 기법 ① — 계획 먼저 승인 (Plan-Before-Code)]
+- AI가 코드를 짜기 전에 어느 파일의 어떤 좌표/함수를 왜 고칠 것인지 수정 계획(Change Spec)부터 브리핑하게 만들어 잘못된 방향의 수정을 코드 생성 전에 차단
+-->
+
+---
+
+# [Module 3] 유지보수형 프롬프팅 3대 기법 ② — 수정 범위 잠금
+## Guardrails & Diff: Whitelist/Blacklist 지정 및 코드 생략(`...`) 금지 (Slide 3-6)
+
+<div class="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs mt-2 mb-3 leading-relaxed">
+  <strong class="text-amber-800">핵심 원리:</strong> 수정 허용 범위(Whitelist)와 수정 금지 영역(Blacklist)을 명시하고, <code># ... 기존 코드 생략 ...</code> 출력을 금지하여 코드 유실 사고를 원천 차단합니다.
+</div>
+
+<div class="font-bold text-xs text-slate-600 mb-1.5">프롬프트 템플릿 전문 (Verbatim)</div>
+
+```text
+방금 설명한 계획대로 코드를 수정해 줘. 단, 아래 제약조건을 반드시 지켜야 해.
+
+[수정 범위 잠금 규칙]
+1. 수정 허용 영역: Python의 `calc_yield()` 함수와 HTML의 `id="result-table"` 영역만 수정할 것.
+2. 수정 금지 영역: 기존의 API 경로(`/api/yield`), `CONFIG` 설정 구조, 상단 요약 카드 로직은 한 글자도 바꾸지 말 것.
+3. 출력 규칙: 코드를 중간에 줄이거나 생략(`...`)하지 말고, 수정된 함수/영역의 전체 코드를 빠짐없이 출력할 것.
+```
+
+<!--
+[Slide 3-6 · 유지보수형 프롬프팅 3대 기법 ② — 수정 범위 잠금 (Guardrails & Diff)]
+- 수정 허용 범위(Whitelist)와 수정 금지 영역(Blacklist)을 명시하고, `# ... 기존 코드 생략 ...` 출력을 금지하여 코드 유실 사고 원천 차단
+-->
+
+---
+
+# [Module 3] 유지보수형 프롬프팅 3대 기법 ③ — 오류 로그 기반 역질문
+## Error-Driven Debugging: 3종 세트 버그 리포트와 원인 후보 선(先) 진단 (Slide 3-7)
+
+<div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs mt-2 mb-3 leading-relaxed">
+  <strong class="text-emerald-800">핵심 원리:</strong> 오류가 발생했을 때 <em>"안 돼요, 고쳐주세요"</em> 대신 <strong>3종 세트 버그 리포트</strong>를 전달하고, <strong>즉시 수정을 금지한 채 원인 후보부터 진단</strong>하게 합니다.
+</div>
+
+<div class="font-bold text-xs text-slate-600 mb-1.5">프롬프트 템플릿 전문 (Verbatim)</div>
+
+```text
+현재 웹 서비스에서 아래와 같은 오류가 발생했어.
+⚠️ 바로 수정 코드를 주지 말고, 먼저 원인을 분석해서 가장 유력한 원인 후보 3가지와 확인 방법부터 알려줘.
+
+1. 발생 현상: 조회 버튼 클릭 시 표가 그려지지 않고 로딩 상태에서 멈춤
+2. 에러 로그 원문:
+   - 브라우저 F12 Network: `500 Internal Server Error`
+   - 서버 Python Log 맨 아랫줄: `ZeroDivisionError: division by zero`
+3. 오류가 발생한 관련 코드 블록:
+   (여기에 Python `calc_yield()` 함수 코드만 붙여넣기)
+```
+
+<!--
+[Slide 3-7 · 유지보수형 프롬프팅 3대 기법 ③ — 오류 로그 기반 역질문 (Error-Driven Debugging)]
+- 오류가 발생했을 때 "안 돼요, 고쳐주세요" 대신 3종 세트 버그 리포트를 전달하고, 즉시 수정을 금지한 채 원인 후보부터 진단
+-->
+
+---
 layout: center
 class: text-left
 ---
