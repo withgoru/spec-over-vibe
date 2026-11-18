@@ -62,7 +62,9 @@ body.dark {
   font-weight: 600 !important;
   color: #475569 !important;
   margin-top: 0.15rem !important;
-  margin-bottom: 0.65rem !important;
+  padding-bottom: 0.45rem !important;
+  margin-bottom: 1.1rem !important;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .slidev-layout h3 {
