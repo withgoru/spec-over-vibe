@@ -410,33 +410,53 @@ CONFIG = {
 ---
 
 # [Module 2] [실전 처방] 문서 없는 기존 프로젝트에 스펙 심기
-## Reverse-Spec Extraction — 3분 만에 SDD 체제로 전환하는 마스터 역추출 프롬프트 (Slide 2-5)
+## Reverse-Spec Extraction — 프로젝트 전체를 스캔해 SDD 체제로 전환하는 마스터 프롬프트 (Slide 2-5)
 
-- 코드만 있고 문서가 없는 기존 서비스도 **코드 수정을 잠근 역추출 프롬프트**를 한 번 실행하면 3분 만에 SDD 체제로 전환 가능
+<div class="grid grid-cols-12 gap-4 mt-2 items-start">
+<div class="col-span-7">
 
 ```text
-너는 시니어 소프트웨어 아키텍트야. 아래 코드는 현재 운영 중인 사내 웹 서비스 코드인데 설계 문서가 없어.
-앞으로 안전하게 유지보수할 수 있도록 기준 문서인 `SPEC.md`를 작성해 줘.
+너는 시니어 소프트웨어 아키텍트야. 현재 이 프로젝트(워크스페이스 전체)는
+운영 중인 사내 웹 서비스인데 설계 문서가 없어. 프로젝트 디렉토리 구조와
+핵심 소스 파일들을 탐색·분석해서 루트에 기준 문서인 `SPEC.md`를 생성해 줘.
 
 [중요 제약조건]
-- 코드를 한 줄도 수정하거나 개선하지 말고, 오직 현재 코드의 동작 사실만 정확히 분석할 것.
+- 기존 코드는 한 줄도 수정하지 말고 현재 구현된 동작 사실만 정확히 분석할 것.
+- node_modules, .venv, dist, 원본 데이터·로그 파일 등은 탐색에서 제외할 것.
 - 개발 용어는 괄호 안에 비전공자도 이해할 수 있는 쉬운 풀이를 덧붙일 것.
 
 [SPEC.md 필수 포함 항목]
-1. 서비스 한 줄 요약 및 핵심 사용자 흐름 (화면 조작 순서)
-2. 코드 구조 맵: 화면 요소 고유 좌표(id/class) 및 백엔드 Python 핵심 함수 입출력 요약
-3. 데이터 입출력 규칙: 참조 데이터셋명, 필수 컬럼명, 계산 공식
-4. 코드 내부에 하드코딩된 설정값 목록 (경로, 컬럼명, 임계값 위치 나열)
-5. 절대 깨지면 안 되는 핵심 불변 규칙 (프론트-백엔드 간 API 경로, JSON 키 이름 등)
-
-[현재 코드]
-(기존 HTML / JS / Python 코드 붙여넣기)
+1. 프로젝트 아키텍처 맵: 디렉토리·파일별 역할 요약 및 핵심 사용자 조작 흐름
+2. 코드 구조 맵: 화면 고유 좌표(id/class) 및 백엔드 핵심 함수·API 라우트 입출력
+3. 데이터 입출력 규칙: 참조 데이터셋명, 필수 컬럼명, 핵심 비즈니스 계산 공식
+4. 하드코딩된 설정값 목록: 경로·컬럼명·임계값이 박혀 있는 실제 파일명과 위치 나열
+5. 핵심 불변 규칙: 프론트-백엔드 간 API 경로, 요청/응답 JSON 키 규격 등
 ```
+
+</div>
+<div class="col-span-5 space-y-2.5 text-xs">
+  <div class="p-3 rounded-xl bg-blue-50 border border-blue-200">
+    <div class="font-bold text-blue-800 text-sm mb-1">프로젝트 단위 역추출 원리</div>
+    <div class="text-slate-700 leading-relaxed">특정 코드 조각을 일일이 복붙하는 대신, 에이전트가 <strong>코드 수정을 잠근 채 프로젝트 전체 구조를 스캔</strong>해 단숨에 SDD 기준점(<code>SPEC.md</code>)을 생성합니다.</div>
+  </div>
+  <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+    <div class="font-bold text-amber-800 text-sm mb-1">⚠️ 주의: 대규모 토큰 소모 위험</div>
+    <div class="text-slate-700 leading-relaxed">프로젝트 전체를 무작정 읽게 하면 패키지 폴더(<code>node_modules</code>, <code>.venv</code>), 빌드 산출물, 대용량 데이터셋까지 스캔하여 <strong>토큰이 폭발적으로 소모되고 분석 정확도도 급감</strong>합니다.</div>
+  </div>
+  <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+    <div class="font-bold text-emerald-800 text-sm mb-1">💡 추천 효율화 전략: 2단계 탑다운 스캔</div>
+    <div class="text-slate-700 leading-relaxed">
+      <strong>① 트리 먼저 스캔:</strong> 폴더·파일 목록만 먼저 읽게 해 핵심 소스 파일(<code>app.py</code>, <code>index.html</code> 등)만 타겟팅<br/>
+      <strong>② 탐색 제외 강제:</strong> 데이터·의존성 폴더를 제외 지정한 뒤 선별된 핵심 파일만 분석해 토큰 80%+ 절감
+    </div>
+  </div>
+</div>
+</div>
 
 <!--
 [Slide 2-5 · [실전 처방] 문서 없는 기존 프로젝트에 스펙 심기 (Reverse-Spec Extraction)]
-- 코드만 있고 문서가 없는 기존 서비스도 코드 수정을 잠근 역추출 프롬프트를 한 번 실행하면 3분 만에 SDD 체제로 전환 가능
-- 마스터 역추출 프롬프트 전문 수록
+- 특정 코드 블록이 아닌 프로젝트 전체에 대해 수행하는 마스터 역추출 프롬프트
+- 주의사항: 프로젝트 전체 스캔 시 토큰 소모가 극심할 수 있으므로, 1단계 파일 트리 스캔 후 핵심 소스만 선별 분석하는 '2단계 탑다운(Top-Down) 스캔 & 탐색 제외' 효율화 전략 권장
 -->
 
 ---
