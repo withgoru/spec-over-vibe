@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css');
+
+:root,
+html,
+body,
+html.dark,
+body.dark {
+  color-scheme: light !important;
+  --slidev-slide-container-background: #ffffff !important;
+  --slidev-code-background: #f8fafc !important;
+}
+
+/* Force pure white background and dark text on all slides regardless of dark mode toggle */
+.slidev-page,
+.slidev-layout,
+.dark .slidev-page,
+.dark .slidev-layout,
+#slide-content {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+/* Global slide canvas padding & overflow guard (980x552 canvas) */
+.slidev-layout {
+  padding: 1.75rem 2.5rem !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  font-family: 'SUIT', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.88rem !important;
+  line-height: 1.45 !important;
+}
+
+/* Headings: IBM Plex Sans KR */
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3,
+.slidev-layout h4,
+.slidev-layout h5,
+.slidev-layout h6 {
+  font-family: 'IBM Plex Sans KR', sans-serif !important;
+  color: #0f172a !important;
+  letter-spacing: -0.02em;
+}
+
+.slidev-layout h1 {
+  font-size: 1.6rem !important;
+  line-height: 1.25 !important;
+  font-weight: 700 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.25rem !important;
+  margin-left: 0 !important;
+}
+
+.slidev-layout h2,
+.slidev-layout h1 + h2 {
+  font-size: 1.02rem !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  margin-top: 0.15rem !important;
+  margin-bottom: 0.65rem !important;
+}
+
+.slidev-layout h3 {
+  font-size: 0.95rem !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  letter-spacing: -0.01em !important;
+  opacity: 1 !important;
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.4rem !important;
+}
+
+/* Body text, lists, tables: SUIT */
+.slidev-layout p,
+.slidev-layout li,
+.slidev-layout td,
+.slidev-layout th,
+.slidev-layout div {
+  font-family: 'SUIT', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.slidev-layout p,
+.slidev-layout li {
+  font-size: 0.86rem !important;
+  line-height: 1.42 !important;
+  margin-top: 0.2rem !important;
+  margin-bottom: 0.2rem !important;
+}
+
+/* Compact tables to prevent vertical overflow */
+.slidev-layout table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: 0.8rem !important;
+  line-height: 1.38 !important;
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.slidev-layout th {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  padding: 0.42rem 0.6rem !important;
+  border-bottom: 2px solid #cbd5e1 !important;
+}
+
+.slidev-layout td {
+  padding: 0.42rem 0.6rem !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+/* Code blocks & inline code (keep monospace) */
+.slidev-layout pre,
+.slidev-layout code,
+.slidev-layout pre *,
+.slidev-layout code * {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+.slidev-layout pre,
+.slidev-layout .shiki {
+  font-size: 0.76rem !important;
+  line-height: 1.36 !important;
+  padding: 0.65rem 0.85rem !important;
+  border-radius: 0.5rem !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  overflow-x: auto !important;
+  max-width: 100% !important;
+}
+
+.slidev-layout :not(pre) > code {
+  font-size: 0.8em !important;
+  padding: 0.1rem 0.3rem !important;
+  border-radius: 0.25rem !important;
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Constrain Mermaid diagrams so they never overflow the slide */
+.slidev-layout .mermaid {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  max-height: 260px !important;
+  overflow: hidden !important;
+}
+
+.slidev-layout .mermaid svg {
+  max-height: 250px !important;
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
