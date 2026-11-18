@@ -12,7 +12,7 @@ transition: slide-left
 <div class="h-full flex flex-col justify-between py-2">
   <div>
     <div class="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold tracking-wide mb-3">
-      동우화인켐 임직원 역량 강화 특강 · SPEC OVER VIBE
+      SPEC OVER VIBE
     </div>
     <h1 class="!text-3xl !leading-tight font-bold text-slate-900 mt-1">
       바이브코딩 웹 서비스, '만들기'에서 '운영·유지보수'까지
@@ -21,7 +21,6 @@ transition: slide-left
       감(Vibe)이 아닌 명세(Spec)와 Git으로 AI를 통제하는 현업 실전 가이드
     </p>
   </div>
-
   <div class="grid grid-cols-3 gap-3 my-4 text-xs">
     <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
       <div class="text-blue-700 font-bold text-xs mb-1">PART 1 · 이론 1부 (50분)</div>
@@ -39,10 +38,8 @@ transition: slide-left
       <div class="text-slate-600 leading-relaxed">고장 내고 → 원인 찾고(<code>F12</code> · 서버 로그 · <code>Diff</code>) → 프롬프트로 안전하게 고치기</div>
     </div>
   </div>
-
   <div class="flex items-center justify-between pt-3 border-t border-slate-200 text-xs text-slate-500">
-    <div><strong>대상:</strong> Dataiku 및 바이브코딩 기반 웹 서비스 개발·운영 현업 구성원 & DS</div>
-    <div><strong>강사:</strong> 최우영 (KickcodePlus) &nbsp;|&nbsp; <strong>구성:</strong> 총 3시간 (이론 2h + 라이브 시연 1h)</div>
+    <div>Choi Wooyoung, 2026</div>
   </div>
 </div>
 
@@ -92,7 +89,6 @@ transition: slide-left
       </div>
     </div>
   </div>
-
   <div class="col-span-7 flex flex-col justify-between space-y-2.5">
     <div class="p-3.5 rounded-xl bg-white border border-slate-200 space-y-2">
       <div class="font-bold text-slate-800 text-sm mb-1">주요 경력 (Professional Journey)</div>
@@ -125,7 +121,6 @@ transition: slide-left
         <span class="text-slate-400 font-medium shrink-0 ml-2">2016</span>
       </div>
     </div>
-
     <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-200">
       <div class="font-bold text-blue-900 text-xs mb-1.5">주요 출강 기업 및 교육 파트너 (Trusted Clients & Partners)</div>
       <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-700">
