@@ -51,7 +51,7 @@ transition: slide-left
 
 ---
 
-# 최우영
+# About me
 ## Owner of KickcodePlus | Web Developer | Lecturer
 
 <div class="grid grid-cols-12 gap-4 mt-3 text-xs items-stretch">
@@ -59,7 +59,7 @@ transition: slide-left
     <div>
       <div class="flex items-center justify-between mb-2">
         <div>
-          <div class="text-base font-bold text-slate-900">최우영 (goru)</div>
+          <div class="text-base font-bold text-slate-900">최우영</div>
           <div class="text-xs text-blue-700 font-semibold">KickcodePlus 대표 · Software Engineer</div>
         </div>
         <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 font-bold text-[11px]">withgoru.com</span>
@@ -223,7 +223,7 @@ transition: slide-left
 
 </div>
 
-<div class="mt-3 p-2.5 rounded-lg bg-blue-50 border-l-4 border-blue-500 text-sm">
+<div class="mt-3 p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-sm">
   <strong>핵심 포인트:</strong> 비전공자에게 필요한 역량은 문법 암기가 아니라 <strong>AI에게 수정 위치를 정확히 지목해 주는 '좌표 독해력(Code Reading)'</strong>입니다.
 </div>
 
@@ -260,15 +260,15 @@ transition: slide-left
 
 <div class="grid grid-cols-2 gap-4 mt-3 items-start">
   <div class="space-y-2.5 text-sm">
-    <div class="p-2.5 rounded-lg bg-red-50 border-l-4 border-red-500">
+    <div class="p-2.5 rounded-lg bg-red-50 border border-red-200">
       <div class="font-bold text-red-700">하드코딩 (Hardcoding)</div>
       <div class="mt-1">데이터셋 이름, 컬럼명(<code>LOT_ID</code>, <code>MEAS_VAL</code>), 공정 판정 기준치(<code>수율 85.0%</code>), 파일 경로가 코드 중간중간에 직접 박혀 있는 상태</div>
     </div>
-    <div class="p-2.5 rounded-lg bg-amber-50 border-l-4 border-amber-500">
+    <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200">
       <div class="font-bold text-amber-700">현업 운영 리스크</div>
       <div class="mt-1">공정 기준치가 <code>85% → 88%</code>로 바뀌거나 원본 테이블 컬럼명이 바뀔 때마다 코드 전체를 뒤져 수정해야 하며, 한 곳이라도 놓치면 서비스 오작동</div>
     </div>
-    <div class="p-2.5 rounded-lg bg-emerald-50 border-l-4 border-emerald-500">
+    <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200">
       <div class="font-bold text-emerald-700">해결 원칙 — 최상단 설정 격리 (Top-level Configuration)</div>
       <div class="mt-1">모든 기준값·컬럼명·경로는 파일 맨 위 <code>CONFIG</code> 딕셔너리 한곳에 모으고 로직은 참조만 하도록 강제</div>
     </div>
@@ -306,15 +306,15 @@ class: text-left
 ## 바이브코딩 웹 서비스 운영·유지보수, 이것만 기억하세요
 
 <div class="grid grid-cols-1 gap-3 mt-4">
-  <div class="p-3 rounded-lg bg-blue-50 border-l-4 border-blue-500">
+  <div class="p-3 rounded-lg bg-blue-50 border border-blue-200">
     <div class="font-bold text-base text-blue-700">1. 코드보다 '명세(<code>SPEC.md</code>)'가 먼저입니다.</div>
     <div class="text-sm mt-1">문서를 먼저 세우고 수정 범위를 잠가야 AI가 기존 기능을 망가뜨리지 않습니다.</div>
   </div>
-  <div class="p-3 rounded-lg bg-amber-50 border-l-4 border-amber-500">
+  <div class="p-3 rounded-lg bg-amber-50 border border-amber-200">
     <div class="font-bold text-base text-amber-700">2. '감'으로 고치지 말고 '로그와 <code>Diff</code>'로 진단하세요.</div>
     <div class="text-sm mt-1">장애가 나면 <code>F12</code>와 서버 로그 맨 아랫줄로 원인을 격리하고, 수정 후에는 반드시 <code>Diff</code>로 AI의 무단 삭제 여부를 검수합니다.</div>
   </div>
-  <div class="p-3 rounded-lg bg-emerald-50 border-l-4 border-emerald-500">
+  <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
     <div class="font-bold text-base text-emerald-700">3. AI에게 시키기 전 반드시 '세이브(<code>Commit</code>)'하세요.</div>
     <div class="text-sm mt-1">Dataiku의 Git 버전 관리(<code>Branch</code> · <code>Commit</code> · <code>Revert</code>)는 비전공자도 실패 걱정 없이 AI를 통제할 수 있는 가장 강력한 안전벨트입니다.</div>
   </div>
